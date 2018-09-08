@@ -8,9 +8,13 @@ In 1992 when I started my first year at the university I only knewed MSDOS, Asse
 
 so, when I first met Unix and "C" there at the University, I falled in love about how operating system works.
 
+There were no internet available for me at that times: I was only to able to navigate via "gopher" at the University; and I purchased those books:
+- [The C Programming Language: ANSI C Version](https://amzn.to/2M888uh) by Dennis M. Ritchie
+- [Developing Your Own 32-Bit Operating System/Book and Cd-Rom](https://amzn.to/2wSOT2d) by RIchard A. Burgess
+
 I wanted to test how time sharing scheduling via interrupt was working and to do this i did a little trick.
 
-I created a kernel that could be launched on top of MSDOS :)
+I created a kernel that could be launched on top of MSDOS written in assembler (NASM) and CPP (DJCPP) :)
 
 Indeed MSDOS was running without HIGHMEM support, it only lives in the first 640KB of RAM.
 
