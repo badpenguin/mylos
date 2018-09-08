@@ -1,6 +1,6 @@
 # MyLOS - My Little Operating System
 
-![MyLOS](/doc/mylosq.png?raw=true)
+![MyLOS](/doc/mylos.png?raw=true)
 
 ## The Story
 
