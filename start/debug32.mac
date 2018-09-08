@@ -1,0 +1,294 @@
+%macro PMODE_PRINT32 5
+	xor eax, eax
+        mov ax, selector_RAW
+	mov ds, ax
+	mov ax, %4
+	mov es, ax
+
+	mov ax, %1
+	imul ax, 80*2
+	mov bx, %2
+	shl bx, 1	
+	add ax, bx
+	add eax, 0xB8000
+	; eax = destination point now
+
+	xor edx, edx
+	mov edx, %3
+	; edx = source point now
+
+	mov bh, my_color
+	mov bl, '*'
+%%ploop:
+	mov bh, %5
+	mov word [ds:eax], bx
+	inc eax
+	inc eax
+	mov bl, byte [es:edx]
+	inc edx
+        cmp byte bl, 0
+	jne %%ploop
+%endmacro
+
+
+%macro PRINTK 2
+        xor eax, eax
+        mov ax, selector_RAW
+        mov ds, ax
+
+        mov ax, %2
+        mov es, ax
+
+        mov ax, selector_kernel_DS
+        mov fs, ax
+
+        mov ax, [FS:KCRT_CursorY]
+        imul ax, 80*2
+        mov bx, [FS:KCRT_CursorX]
+        shl bx, 1 
+        add ax, bx
+        add eax, 0xB8000
+        ; eax = destination point now
+
+        xor edx, edx
+        mov edx, %1
+        ; edx = source point now
+
+;        mov bh, my_color
+;        mov bl, '*'
+
+        xor ecx, ecx    ; Used to count the char printed
+        mov bh, byte [FS:KCRT_Color]
+%%p2loop:
+        mov bl, [es:edx]
+        mov word [ds:eax], bx
+        inc edx
+        inc eax
+        inc eax
+        inc cx
+        cmp byte bl, 0
+        jne %%p2loop
+        ; Advance the cursor
+        dec cx
+        add word [FS:KCRT_CursorX], cx
+%endmacro
+
+
+%macro PRINTK_COLOR 1
+        mov ax, selector_kernel_DS
+        mov FS, ax
+        mov byte [FS:KCRT_Color], %1
+%endmacro
+
+
+%macro PRINTK_GOTOXY 2
+        mov ax, selector_kernel_DS
+        mov FS, ax
+        mov word [FS:KCRT_CursorX], %1
+        mov word [FS:KCRT_CursorY], %2
+%endmacro
+
+
+%macro PRINTK_NL 0
+        mov ax, selector_kernel_DS
+        mov FS, ax
+        mov word [FS:KCRT_CursorX], 0
+        add word [FS:KCRT_CursorY], 1
+%endmacro
+
+%macro TRACE_DEBUG 1
+        push eax
+        mov ax, selector_kernel_DS
+	mov ds, ax
+        mov si, htoa_buffer
+        mov cx, 8
+        pop eax 
+;;htoa
+        xor     ebx, ebx                ; clear ebx
+        add     si, cx                  ; adjust target address
+        dec     si
+%%htoa1:
+        mov     bl, al                  ; get hexadecimal code
+        and     bl, 0x0F                ; distinguish it
+        mov     bl, byte [ds:htoa_tab + bx]     ; get indexed ascii character
+        mov     byte [ds:esi], bl       ; place it in target address
+        dec     esi                     ; adjust target address
+        shr     eax, 4                  ; get rid of it
+        loop    %%htoa1                   ; continue
+
+	; DISPLAY
+        PRINTK %1, selector_kernel_DS
+        PRINTK htoa_buffer, selector_kernel_DS
+%endmacro
+
+
+
+;-------------------------------------------------------- DUMP
+%macro OS_DUMP 2
+; %1 = IRQ Message Offset  - %2 = Selector
+; Save all the register because the PRINTK function will change it
+        ; Save Registers
+        push esp
+        push ebp
+        push esi
+        push edi
+        push edx
+        push ecx
+        push ebx
+        push eax
+        ; Save segment registers
+        xor eax, eax
+        mov ax, ss
+        push eax
+        mov ax, gs
+        push eax
+        mov ax, fs
+        push eax
+        mov ax, es
+        push eax
+        mov ax, ds
+        push eax
+        mov ax, cs
+        push eax
+
+        ;PMODE_PRINT32 0, 0, irq0D_message, selector_kernel_DS, my_color2
+        PRINTK_COLOR my_color2
+        call dword selector_kernel_CS : CRT_LineFeed 	; PRINTK_NL
+        PRINTK %1, %2
+        call dword selector_kernel_CS : CRT_LineFeed	; PRINTK_NL
+        PRINTK_COLOR my_color3
+
+        pop eax
+        TRACE_DEBUG trace_CS
+        pop eax
+        TRACE_DEBUG trace_DS
+        pop eax
+        TRACE_DEBUG trace_ES
+        pop eax
+        TRACE_DEBUG trace_FS
+        pop eax
+	call dword selector_kernel_CS : CRT_LineFeed	; PRINTK_NL
+        TRACE_DEBUG trace_GS
+        pop eax
+        TRACE_DEBUG trace_SS
+        call dword selector_kernel_CS : CRT_LineFeed	; PRINTK_NL
+
+        pop eax
+        TRACE_DEBUG trace_EAX
+        pop eax
+        TRACE_DEBUG trace_EBX
+        pop eax
+        TRACE_DEBUG trace_ECX
+        pop eax
+        TRACE_DEBUG trace_EDX
+        call dword selector_kernel_CS : CRT_LineFeed	; PRINTK_NL
+
+        pop eax
+        TRACE_DEBUG trace_EDI
+        pop eax
+        TRACE_DEBUG trace_ESI
+        pop eax
+        TRACE_DEBUG trace_EBP
+        pop eax
+        TRACE_DEBUG trace_ESP
+        call dword selector_kernel_CS : CRT_LineFeed	; PRINTK_NL
+
+        call dword selector_kernel_CS : CRT_LineFeed	; PRINTK_NL
+	PRINTK trace_Stack, selector_kernel_DS
+        call dword selector_kernel_CS : CRT_LineFeed	; PRINTK_NL
+
+        mov ax, selector_RAW
+        mov fs, ax
+        mov eax, esp
+        mov ebp, eax
+        mov eax, [FS:EBP]
+        TRACE_DEBUG trace_Space
+        call dword selector_kernel_CS : CRT_LineFeed
+
+        mov ax, selector_RAW
+        mov fs, ax
+        mov eax, esp
+        mov ebp, eax
+	add ebp, 4
+        mov eax, [FS:EBP]
+        TRACE_DEBUG trace_Space
+        call dword selector_kernel_CS : CRT_LineFeed
+
+        mov ax, selector_RAW
+        mov fs, ax
+        mov eax, esp
+        mov ebp, eax
+	add ebp, 8
+        mov eax, [FS:EBP]
+        TRACE_DEBUG trace_Space
+        call dword selector_kernel_CS : CRT_LineFeed
+
+        mov ax, selector_RAW
+        mov fs, ax
+        mov eax, esp
+        mov ebp, eax
+	add ebp, 12
+        mov eax, [FS:EBP]
+        TRACE_DEBUG trace_Space
+        call dword selector_kernel_CS : CRT_LineFeed
+
+        mov ax, selector_RAW
+        mov fs, ax
+        mov eax, esp
+        mov ebp, eax
+	add ebp, 16
+        mov eax, [FS:EBP]
+        TRACE_DEBUG trace_Space
+        call dword selector_kernel_CS : CRT_LineFeed
+
+        mov ax, selector_RAW
+        mov fs, ax
+        mov eax, esp
+        mov ebp, eax
+	add ebp, 20
+        mov eax, [FS:EBP]
+        TRACE_DEBUG trace_Space
+        call dword selector_kernel_CS : CRT_LineFeed
+
+        mov ax, selector_RAW
+        mov fs, ax
+        mov eax, esp
+        mov ebp, eax
+	add ebp, 24
+        mov eax, [FS:EBP]
+        TRACE_DEBUG trace_Space
+        call dword selector_kernel_CS : CRT_LineFeed
+
+        mov ax, selector_RAW
+        mov fs, ax
+        mov eax, esp
+        mov ebp, eax
+	add ebp, 28
+        mov eax, [FS:EBP]
+        TRACE_DEBUG trace_Space
+        call dword selector_kernel_CS : CRT_LineFeed
+
+        mov ax, selector_RAW
+        mov fs, ax
+        mov eax, esp
+        mov ebp, eax
+	add ebp, 32
+        mov eax, [FS:EBP]
+        TRACE_DEBUG trace_Space
+        call dword selector_kernel_CS : CRT_LineFeed
+
+        call dword selector_kernel_CS : CRT_LineFeed
+        PRINTK trace_Original, selector_kernel_DS
+        call dword selector_kernel_CS : CRT_LineFeed
+
+        mov ax, selector_RAW
+        mov fs, ax
+        xor eax, eax
+        mov ax, word [fs:backup_SS]
+        shl ax, 4
+        TRACE_DEBUG trace_Space
+        call dword selector_kernel_CS : CRT_LineFeed
+;        retf
+%endmacro
+
+

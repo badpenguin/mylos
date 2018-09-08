@@ -1,0 +1,32 @@
+welcome32_message:
+        db ' WELCOME  TO  PROTECT - MODE !! ', 0, '$'
+bad32_signature:
+        db ' BAD KERNEL SIGNATURE !! ', 0, '$'
+
+KCRT_CursorX	dw	0
+KCRT_CursorY	dw	0
+KCRT_Color      db      my_color
+
+htoa_buffer:
+        db 0,0,0,0,0,0,0,0,0,0
+
+htoa_tab        db      '0123456789ABCDEF'
+
+trace_CS        db      '   CS: ', 0
+trace_DS        db      '   DS: ', 0
+trace_ES        db      '   ES: ', 0
+trace_SS        db      '   SS: ', 0
+trace_FS        db      '   FS: ', 0
+trace_GS        db      '   GS: ', 0
+trace_EAX       db      '  eAX: ', 0
+trace_EBX       db      '  eBX: ', 0
+trace_ECX       db      '  eCX: ', 0
+trace_EDX       db      '  eDX: ', 0
+trace_EDI       db      '  eDI: ', 0
+trace_ESI       db      '  eSI: ', 0
+trace_EBP       db      '  eBP: ', 0
+trace_ESP       db      '  eSP: ', 0
+
+trace_Stack     db      '  Stack Trace: ', 0
+trace_Space     db      '               ', 0
+trace_Original  db      '  Starting at: ', 0

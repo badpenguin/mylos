@@ -1,0 +1,39 @@
+# kernel DEPENDENCIES
+kernel/driver/console/console.o: kernel/driver/console/console.cpp \
+ kernel/include/kernel.h kernel/include/crt.h \
+ kernel/include/kmemory.h kernel/include/tss.h \
+ kernel/include/process.h kernel/include/gdt.h \
+ kernel/include/switch.h kernel/ddk/kbd_api.h
+kernel/driver/crt/crt2.o: kernel/driver/crt/crt2.cpp \
+ kernel/include/kernel.h kernel/include/crt.h
+kernel/driver/kbd/kbd2.o: kernel/driver/kbd/kbd2.cpp \
+ kernel/include/kernel.h kernel/include/crt.h \
+ kernel/include/kbd.h kernel/ddk/kbd_api.h \
+ kernel/include/switch.h
+kernel/core/gdt.o: kernel/core/gdt.cpp \
+ kernel/include/kernel.h kernel/include/crt.h \
+ kernel/include/kmemory.h kernel/include/farptr.h \
+ kernel/include/tss.h kernel/include/gdt.h
+kernel/core/idt.o: kernel/core/idt.cpp \
+ kernel/include/kernel.h kernel/include/kmemory.h
+kernel/core/kmemory.o: kernel/core/kmemory.cpp \
+ kernel/include/kernel.h kernel/include/crt.h \
+ kernel/include/kmemory.h
+kernel/core/process.o: kernel/core/process.cpp \
+ kernel/include/kernel.h kernel/include/crt.h \
+ kernel/include/kmemory.h kernel/include/tss.h \
+ kernel/include/gdt.h kernel/include/process.h \
+ kernel/include/switch.h kernel/include/sched.h
+kernel/core/sched.o: kernel/core/sched.cpp \
+ kernel/include/kernel.h kernel/include/tss.h \
+ kernel/include/process.h kernel/include/crt.h \
+ kernel/ddk/kbd_api.h
+kernel/ddk/kbd_api.o: kernel/ddk/kbd_api.cpp \
+ kernel/include/kernel.h kernel/include/kbd.h \
+ kernel/ddk/kbd_api.h
+kernel/kernel.o: kernel/kernel.cpp kernel/include/kernel.h \
+ kernel/include/crt.h kernel/include/idt.h \
+ kernel/include/kbd.h kernel/include/kmemory.h \
+ kernel/include/tss.h kernel/include/process.h \
+ kernel/include/gdt.h kernel/include/console.h \
+ kernel/include/switch.h

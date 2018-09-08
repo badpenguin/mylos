@@ -1,0 +1,32 @@
+# KERNEL DEPENDENCIES
+console.o: kernel/driver/console/console.cpp /usr/include/stdc-predef.h \
+ kernel/include/kernel.h kernel/include/crt.h kernel/include/kmemory.h \
+ kernel/include/tss.h kernel/include/process.h kernel/include/gdt.h \
+ kernel/include/switch.h kernel/ddk/kbd_api.h
+crt2.o: kernel/driver/crt/crt2.cpp /usr/include/stdc-predef.h \
+ kernel/include/kernel.h kernel/include/crt.h
+kbd2.o: kernel/driver/kbd/kbd2.cpp /usr/include/stdc-predef.h \
+ kernel/include/kernel.h kernel/include/crt.h kernel/include/kbd.h \
+ kernel/ddk/kbd_api.h kernel/include/switch.h
+gdt.o: kernel/core/gdt.cpp /usr/include/stdc-predef.h \
+ kernel/include/kernel.h kernel/include/crt.h kernel/include/kmemory.h \
+ kernel/include/farptr.h kernel/include/tss.h kernel/include/gdt.h \
+ kernel/include/traps.h
+sched.o: kernel/core/sched.cpp /usr/include/stdc-predef.h \
+ kernel/include/kernel.h kernel/include/tss.h kernel/include/process.h \
+ kernel/include/crt.h kernel/ddk/kbd_api.h
+kmemory.o: kernel/core/kmemory.cpp /usr/include/stdc-predef.h \
+ kernel/include/kernel.h kernel/include/crt.h kernel/include/kmemory.h
+process.o: kernel/core/process.cpp /usr/include/stdc-predef.h \
+ kernel/include/kernel.h kernel/include/crt.h kernel/include/kmemory.h \
+ kernel/include/tss.h kernel/include/gdt.h kernel/include/process.h \
+ kernel/include/switch.h kernel/include/sched.h
+idt.o: kernel/core/idt.cpp /usr/include/stdc-predef.h \
+ kernel/include/kernel.h kernel/include/kmemory.h
+kbd_api.o: kernel/ddk/kbd_api.cpp /usr/include/stdc-predef.h \
+ kernel/include/kernel.h kernel/include/kbd.h kernel/ddk/kbd_api.h
+kernel.o: kernel/kernel.cpp /usr/include/stdc-predef.h \
+ kernel/include/kernel.h kernel/include/crt.h kernel/include/idt.h \
+ kernel/include/kbd.h kernel/include/kmemory.h kernel/include/tss.h \
+ kernel/include/process.h kernel/include/gdt.h kernel/include/console.h \
+ kernel/include/switch.h kernel/include/timer.h kernel/include/sched.h

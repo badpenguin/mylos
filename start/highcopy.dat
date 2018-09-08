@@ -1,0 +1,38 @@
+; Copying real memory to high memory using INT15 needs some structure
+; to be filled with right values.
+
+; used by print_hex
+high_copy_debug:
+        db 0, 0, 0, 0
+
+; Padding, for speed.
+        times ($$-$) &15 nop
+
+; Define the structure used to perform the hig copy
+copy_gdt:
+	        dw 0,0,0,0              ; Reserved for BIOS
+        	dw 0,0,0,0              ; Reserved for BIOS
+	        dw 0xffff               ; Source segment length in bytes
+	; 24-bit linear source address, low byte first
+	; must be filled with CS
+	copy_s1 db 0			; 0,0,1 = 1.000h
+	copy_s2 db 0
+	copy_s3 db 0
+        	db 0x93                 ; source segment access rights (93h)
+        	dw 0                    ; limit16,base24 =0 (must be zero)
+
+        	dw 0xffff               ; destination segment length in bytes
+	; 24-bit linear destination address, low byte first
+	; must be filled with the destination address
+	copy_d1 db 0			; .com starts at 0x100 !
+	copy_d2 db 0
+	copy_d3 db 0x10         	; Destination = 0x100000 = 1MB
+        	db 0x93         	; destination segment access rights (93h)
+	        dw 0            	; limit16,base24 =0 (must be 0)
+        	dw 0,0,0,0      	; BIOS reserved
+	        dw 0,0,0,0      	; BIOS reserved
+        	dw 0,0,0,0      	; Dummy: for safety not used by "boot_gdt"
+
+;-------------------------------------------------------------------------
+
+

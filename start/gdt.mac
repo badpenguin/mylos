@@ -1,0 +1,10 @@
+%macro SET_GDT_ENTRY 3
+	mov	ax, %2				; CS segment start
+	mov	es, ax
+	mov	si, %3				; SI = offset
+	Call	Calc_PM_Address
+	mov	[ %1 + Base_A15_A00], ax
+	mov	[ %1 + Base_A23_A16], dl
+	mov	[ %1 + Base_A31_A24], dh
+%endmacro 
+

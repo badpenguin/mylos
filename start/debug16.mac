@@ -1,0 +1,28 @@
+%macro GET_KEYSTROKE 0
+; Display the message
+	DOS_MSG msg_bell
+; Get the key
+	push ax
+        xor ax, ax
+        int 0x16
+        pop ax
+%endmacro
+
+
+%macro DOS_MSG 1
+	push dx
+	push ax
+        mov dx, %1
+        mov ax, 0x0900
+        int 0x21
+	pop ax
+	pop dx	
+%endmacro
+
+
+%macro	DOS_DOT 0
+	DOS_MSG msg_comma
+%endmacro
+
+
+

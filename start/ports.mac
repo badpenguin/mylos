@@ -1,0 +1,7 @@
+
+; IO_Delay cause a an about 1uS delay
+; Because seems that ports $ED is used for creating delay
+%macro IO_DELAY 1
+	times	%1	out 0xED, ax
+%endmacro
+

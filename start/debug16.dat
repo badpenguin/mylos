@@ -1,0 +1,36 @@
+; Debug Messages to be displayed while in 16 bit
+
+	msg_logo	db 'MYLOS - DOS Starter v. 1.000 by Antonio GALLO <agx@usa.net>', '$', 0
+        msg_pstart	db 13,10,'DOS Loader started:','$',0
+	msg_vstart	db 13,10,'VIDEO Init started:','$',0
+        msg_v86mode	db 13,10,'Sorry, detected v86 mode !',13,10,'$',0
+	msg_setgdt	db 13,10,'       Setting GDT:','$',0
+;
+	msg_bell	db 0x07, ' -----> Press a key', '$', 0
+	msg_comma	db '.','$',0
+
+; OLD
+
+	msg_setidt		db 13,10,'       Setting IDT:','$',0
+	msg_8259start		db 13,10,'Reprogramming 8259:','$',0
+	msg_8259save		db 13,10,'Saving 8259 status:','$',0
+	msg_a20start		db 13,10,' Enabling A20 Line:','$',0
+        msg_noa20line         db 13,10, 'Sorry, failed to initialize the A20 line', 13,10,'$',0
+        msg_a20ok		db ' (A20 Line is ON) ', '$',0
+	msg_switch		db 13,10,'Switching to Pmode:','$',0
+	msg_dosquit		db 13,10,'Quitted do DOS.',13,10,'$',0
+	msg_no386		db 13,10,'Sorry, at least a 80386 is needed!',13,10,'$',0
+	msg_returned		db 13,10,'WE HAVE SUCCESSFULLY RETURNED FROM PROTECT MODE'
+				db 13,10,'Press a key to return to DOS ...',13,10,13,10,'$',0,0
+	msg_noint15		db 13,10,'Sorry, INT 15 seems not to work !',13,10,'$',0
+;	msg_int15copy		db 13,10,'Starting high copy:','$',0
+;	msg_highcopyends	db ' (High copy O.K.) ','$',0
+	msg_jumping		db '==> Now in protect mode, jumping high .....', 0, '$', 0
+
+;welcome_message:
+;	db '                     ***** WELCOME INTO THE PROTECT MODE *****                '
+;	db '$', 0
+
+
+;----------------------------------------------------------------
+

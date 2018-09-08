@@ -1,0 +1,78 @@
+;-------------------------------------------------------------------------
+
+%imacro Speaker_On 1
+; valore consigliato 0x1234
+; program the PIT chip
+	mov	al,	0xB6
+	out 	port_PIT_Control, al
+
+	mov 	bx, %1		; PIT_FREQ div your_frequency
+	mov	al, bl
+	out	port_PIT_Channel2, al
+	mov	al, bh
+	out	port_PIT_Channel2, al
+
+	xor	ax, ax
+; connect the speaker to the PIT
+; Port[SPEAKER_PORT] := Port[SPEAKER_PORT] or 3;
+	in	al, port_Speaker
+	or	al, 3
+	out	port_Speaker, al
+%endmacro
+
+;------------------------------------------------------------------
+
+%imacro Speaker_Delay 1
+	mov	cx,	%1
+%%loop1:
+	mov	dx,	0xFFFF
+%%loop2:
+	dec dx
+	jnz	%%loop2
+	dec cx
+	jnz	%%loop1
+%endmacro
+
+;---------------------------------------------------------------------
+	
+%imacro Speaker_Off 0
+;  Port[SPEAKER_PORT] := Port[SPEAKER_PORT] and $FC;
+	xor 	ax, 	ax
+	in	al,	port_Speaker
+	and	al,	0xFC
+	out	port_Speaker, al
+%endmacro
+
+;-------------------------------------------------------------------------
+; BEEP Facility
+;-------------------------------------------------------------------------
+
+	DEF_FREQ	EQU	0x1234
+	DEF_DELAY	EQU	0x200
+	DEF_PAUSE	EQU	0x075
+
+%imacro BEEP 0
+	; Speaker_On 0x1234
+        mov     al,     0xB6
+        out     port_PIT_Control, al
+        mov     bx, DEF_FREQ
+        mov     al, bl
+        out     port_PIT_Channel2, al
+        mov     al, bh
+        out     port_PIT_Channel2, al
+        xor     ax, ax
+        in      al, port_Speaker
+        or      al, 3
+        out     port_Speaker, al
+
+	Speaker_Delay	DEF_DELAY
+
+	;Speaker_Off
+        xor     ax,     ax
+        in      al,     port_Speaker
+        and     al,     0xFC
+        out     port_Speaker, al
+
+	Speaker_Delay	DEF_PAUSE
+%endmacro
+

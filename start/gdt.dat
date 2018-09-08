@@ -1,0 +1,154 @@
+;----------------------------------------------------------------------------
+; GDT - Global Descriptor Table
+;----------------------------------------------------------------------------
+; "gdt_null" is used both as GDT[0] and as GDT's 6 byte Pointer
+
+; Padding, for speed.
+        times ($$-$) &15 nop
+
+;------------------------------------------------------------------------
+
+; GDT[0], this is the dummy NULL selector
+gdt_null:
+        dd 0
+        dd 0
+
+; GDT[1]
+gdt_kernel_CS:
+        dw 0xFFFF       ; 0
+        dw 0
+        db 0
+        db 10011010b    ; Present - Dpl=00 - DT=1 - Type=101 code exe/read - A=1
+        db 11001111b    ; G=1 - D=1 bit32 - 0 - AVL=0 - Limit = 0x10 (1MB)
+        db 0
+
+; GDT[2]
+gdt_kernel_DS:
+        dw 0xFFFF       ; 0
+        dw 0
+        db 0
+        db 10010010b    ; P=1 - DPL=00 - DT=1 - Type=001 Data read/write - A=1
+        db 11001111b    ; G=1 - B=1 - 0 - AVL=0 - Limit = 0x10 (1MB)
+        db 0
+
+; GDT[3], this is used both for stack both for accessing any parts of the
+; memory
+gdt_kernel_RAW:
+        dw 0xFFFF       ; 0
+        dw 0
+        db 0
+        db 10010010b    ; P=1 - DPL=00 - DT=1 - Type=001 Data read/write - A=1
+        db 11001111b    ; G=1 - B=1 - 0 - AVL=0 - Limit = 0x10 (1MB)
+        db 0
+
+; GDT[4], this is used to access code at the start of the .com files
+gdt_code16:
+        dw 0
+        dw 0
+        db 0            ; Starting at 0
+        db 10011011b    ; Present - Dpl=00 - DT=1 - Type=101 code exe/read - A=1
+        db 00000010b    ; G=0 - D=0 bit16 - 0 - AVL=0 - Limit = 0x10 (1MB)
+        db 0
+
+; GDT[5], this is the data segment selector for gdt_code16
+gdt_data16:
+        dw 0
+        dw 0
+        db 0
+        db 10010011b    ; P=1 - DPL=00 - DT=1 - Type=001 Data read/write - A=1
+        db 01000010b    ; G=0 - B=1 - 0 - AVL=0 - Limit = 0x10 (1MB)
+        db 0
+
+; GDT[6] - this is a mirror of gdt_kernel_CS to modify it
+gdt_kernel_XS:
+        dw 0xFFFF       ; 0
+        dw 0
+        db 0
+        db 10011010b   ; Present - Dpl=00 - DT=1 - Type=101 code exe/read - A=1
+        db 11001111b    ; G=1 - D=1 bit32 - 0 - AVL=0 - Limit = 0x10 (1MB)
+        db 0
+
+;-------------------------------------------------------
+gdt_kernel_Task0:
+	dw task0_limit
+	dw 0		; Base
+	db 0
+	db 10001001b	; (89)
+	db 0
+	db 0
+
+gdt_kernel_stack0:
+	dw stack0_limit
+	dw 0
+	db 0
+        db 10010010b    ; (92)
+        db 0
+	db 0
+
+gdt_kernel_stack1:
+	dw stack1_limit
+	dw 0
+	db 0
+        db 10110010b    ; (B2)
+        db 0
+	db 0
+
+gdt_kernel_stack2:
+	dw stack2_limit
+	dw 0
+	db 0
+        db 11010010b    ; (D2)
+        db 0
+	db 0
+
+gdt_terminal:
+	dw 0xFFFF
+	dw 0x8000
+        db 0x0B         ;= 00001011
+        db 0xF2         ;= 11110010
+        db 0
+        db 0
+
+gdt_irq32:
+	dw 0xFFFF
+	dw 0
+	db 0
+	db 10011010b	; 0x9A
+	db 0 
+	db 0 
+
+;---------------------------------------------------------
+
+gdt_kernel32_CS:
+        dw 0xFFFF       ; 0
+        dw 0
+        db 0x10         ; 1MB
+        db 10011010b    ; Present - Dpl=00 - DT=1 - Type=101 code exe/read - A=1
+        db 11001111b    ; G=1 - D=1 bit32 - 0 - AVL=0 - Limit = 0x10 (1MB)
+        db 0
+
+gdt_kernel32_DS:
+        dw 0xFFFF       ; 0
+        dw 0
+        db 0x10         ; 1MB
+        db 10010010b    ; P=1 - DPL=00 - DT=1 - Type=001 Data read/write - A=1
+        db 11001111b    ; G=1 - B=1 - 0 - AVL=0 - Limit = 0x10 (1MB)
+        db 0
+
+;---------------------------------------------------------
+;---------------------------------------------------------
+
+        GDT_LEN         equ $ - gdt_null
+
+; This is the pointer used into the LGDT instruction 
+gdt_pointer:
+        gdt_limit       dw GDT_LEN-1	; GDT Size in byte
+        gdt_base        dd 00
+
+
+;----------------------------------------------------------------------------
+; LDT - Local Descriptor Table
+;----------------------------------------------------------------------------
+
+; No LDT is actually set up
+

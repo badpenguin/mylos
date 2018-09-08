@@ -1,0 +1,232 @@
+;--------------------------------------------------------------
+; This is the standard pointer for the MS-DOS IDT
+; It starts at 0:0 and is (256*4) bytes long
+
+dos_idt:
+        IDT_limit               dw 0x03FF          ; DOS IDT limit
+        IDT_addr                dd 0               ; DOS IDT segment linear address
+
+; Padding, for speed.
+        times ($$-$) &15 nop
+
+;--------------------------------------------------------------
+; #CHECK : our IDT is currently at 0:0 and have size of 0
+;          any INTS you get will result into one shut-down
+
+; Start Our IDT
+
+        IRQ00:
+			dw 0	; Handle_IRQ0   ; Offset 15:0
+                	dw selector_code16      ; Segment Selector
+        	        db 0                    ; 0
+	                db 10001110b            ; flag
+                	dw 0                    ; Offset 31:16
+
+
+        IRQ01:
+			dw 0	; Handle_IRQ0   ; Offset 15:0
+                	dw selector_code16      ; Segment Selector
+        	        db 0                    ; 0
+	                db 10001110b            ; flag
+                	dw 0                    ; Offset 31:16
+        IRQ02:
+			dw 0	; Handle_IRQ0   ; Offset 15:0
+                	dw selector_code16      ; Segment Selector
+        	        db 0                    ; 0
+	                db 10001110b            ; flag
+                	dw 0                    ; Offset 31:16
+        IRQ03:
+			dw 0	; Handle_IRQ0   ; Offset 15:0
+                	dw selector_code16      ; Segment Selector
+        	        db 0                    ; 0
+	                db 10001110b            ; flag
+                	dw 0                    ; Offset 31:16
+        IRQ04:
+			dw 0	; Handle_IRQ0   ; Offset 15:0
+                	dw selector_code16      ; Segment Selector
+        	        db 0                    ; 0
+	                db 10001110b            ; flag
+                	dw 0                    ; Offset 31:16
+        IRQ05:
+			dw 0	; Handle_IRQ0   ; Offset 15:0
+                	dw selector_code16      ; Segment Selector
+        	        db 0                    ; 0
+	                db 10001110b            ; flag
+                	dw 0                    ; Offset 31:16
+        IRQ06:
+			dw 0	; Handle_IRQ0   ; Offset 15:0
+                	dw selector_code16      ; Segment Selector
+        	        db 0                    ; 0
+	                db 10001110b            ; flag
+                	dw 0                    ; Offset 31:16
+        IRQ07:
+			dw 0	; Handle_IRQ0   ; Offset 15:0
+                	dw selector_code16      ; Segment Selector
+        	        db 0                    ; 0
+	                db 10001110b            ; flag
+                	dw 0                    ; Offset 31:16
+        IRQ08:
+			dw 0	; Handle_IRQ0   ; Offset 15:0
+                	dw selector_code16      ; Segment Selector
+        	        db 0                    ; 0
+	                db 10001110b            ; flag
+                	dw 0                    ; Offset 31:16
+        IRQ09:
+			dw 0	; Handle_IRQ0   ; Offset 15:0
+                	dw selector_code16      ; Segment Selector
+        	        db 0                    ; 0
+	                db 10001110b            ; flag
+                	dw 0                    ; Offset 31:16
+        IRQ0A:
+			dw 0	; Handle_IRQ0   ; Offset 15:0
+                	dw selector_code16      ; Segment Selector
+        	        db 0                    ; 0
+	                db 10001110b            ; flag
+                	dw 0                    ; Offset 31:16
+        IRQ0B:
+			dw 0	; Handle_IRQ0   ; Offset 15:0
+                	dw selector_code16      ; Segment Selector
+        	        db 0                    ; 0
+	                db 10001110b            ; flag
+                	dw 0                    ; Offset 31:16
+        IRQ0C:
+			dw 0	; Handle_IRQ0   ; Offset 15:0
+                	dw selector_code16      ; Segment Selector
+        	        db 0                    ; 0
+	                db 10001110b            ; flag
+                	dw 0                    ; Offset 31:16
+        IRQ0D:
+			dw 0	; Handle_IRQ0   ; Offset 15:0
+                	dw selector_code16      ; Segment Selector
+        	        db 0                    ; 0
+	                db 10001110b            ; flag
+                	dw 0                    ; Offset 31:16
+        IRQ0E:
+			dw 0	; Handle_IRQ0   ; Offset 15:0
+                	dw selector_code16      ; Segment Selector
+        	        db 0                    ; 0
+	                db 10001110b            ; flag
+                	dw 0                    ; Offset 31:16
+        IRQ0F:
+			dw 0	; Handle_IRQ0   ; Offset 15:0
+                	dw selector_code16      ; Segment Selector
+        	        db 0                    ; 0
+	                db 10001110b            ; flag
+                	dw 0                    ; Offset 31:16
+        IRQ10:
+			dw 0	; Handle_IRQ0   ; Offset 15:0
+                	dw selector_code16      ; Segment Selector
+        	        db 0                    ; 0
+	                db 10001110b            ; flag
+                	dw 0                    ; Offset 31:16
+        IRQ11:
+			dw 0	; Handle_IRQ0   ; Offset 15:0
+                	dw selector_code16      ; Segment Selector
+        	        db 0                    ; 0
+	                db 10001110b            ; flag
+                	dw 0                    ; Offset 31:16
+        IRQ12:
+			dw 0	; Handle_IRQ0   ; Offset 15:0
+                	dw selector_code16      ; Segment Selector
+        	        db 0                    ; 0
+	                db 10001110b            ; flag
+                	dw 0                    ; Offset 31:16
+        IRQ13:
+			dw 0	; Handle_IRQ0   ; Offset 15:0
+                	dw selector_code16      ; Segment Selector
+        	        db 0                    ; 0
+	                db 10001110b            ; flag
+                	dw 0                    ; Offset 31:16
+        IRQ14:
+			dw 0	; Handle_IRQ0   ; Offset 15:0
+                	dw selector_code16      ; Segment Selector
+        	        db 0                    ; 0
+	                db 10001110b            ; flag
+                	dw 0                    ; Offset 31:16
+        IRQ15:
+			dw 0	; Handle_IRQ0   ; Offset 15:0
+                	dw selector_code16      ; Segment Selector
+        	        db 0                    ; 0
+	                db 10001110b            ; flag
+                	dw 0                    ; Offset 31:16
+        IRQ16:
+			dw 0	; Handle_IRQ0   ; Offset 15:0
+                	dw selector_code16      ; Segment Selector
+        	        db 0                    ; 0
+	                db 10001110b            ; flag
+                	dw 0                    ; Offset 31:16
+        IRQ17:
+			dw 0	; Handle_IRQ0   ; Offset 15:0
+                	dw selector_code16      ; Segment Selector
+        	        db 0                    ; 0
+	                db 10001110b            ; flag
+                	dw 0                    ; Offset 31:16
+        IRQ18:
+			dw 0	; Handle_IRQ0   ; Offset 15:0
+                	dw selector_code16      ; Segment Selector
+        	        db 0                    ; 0
+	                db 10001110b            ; flag
+                	dw 0                    ; Offset 31:16
+        IRQ19:
+			dw 0	; Handle_IRQ0   ; Offset 15:0
+                	dw selector_code16      ; Segment Selector
+        	        db 0                    ; 0
+	                db 10001110b            ; flag
+                	dw 0                    ; Offset 31:16
+        IRQ1A:
+			dw 0	; Handle_IRQ0   ; Offset 15:0
+                	dw selector_code16      ; Segment Selector
+        	        db 0                    ; 0
+	                db 10001110b            ; flag
+                	dw 0                    ; Offset 31:16
+        IRQ1B:
+			dw 0	; Handle_IRQ0   ; Offset 15:0
+                	dw selector_code16      ; Segment Selector
+        	        db 0                    ; 0
+	                db 10001110b            ; flag
+                	dw 0                    ; Offset 31:16
+        IRQ1C:
+			dw 0	; Handle_IRQ0   ; Offset 15:0
+                	dw selector_code16      ; Segment Selector
+        	        db 0                    ; 0
+	                db 10001110b            ; flag
+                	dw 0                    ; Offset 31:16
+        IRQ1D:
+			dw 0	; Handle_IRQ0   ; Offset 15:0
+                	dw selector_code16      ; Segment Selector
+        	        db 0                    ; 0
+	                db 10001110b            ; flag
+                	dw 0                    ; Offset 31:16
+        IRQ1E:
+			dw 0	; Handle_IRQ0   ; Offset 15:0
+                	dw selector_code16      ; Segment Selector
+        	        db 0                    ; 0
+	                db 10001110b            ; flag
+                	dw 0                    ; Offset 31:16
+        IRQ1F:
+			dw 0	; Handle_IRQ0   ; Offset 15:0
+                	dw selector_code16      ; Segment Selector
+        	        db 0                    ; 0
+	                db 10001110b            ; flag
+                	dw 0                    ; Offset 31:16
+
+        IRQ20:
+			dw 0	; Handle_IRQ0   ; Offset 15:0
+                	dw selector_code16      ; Segment Selector
+        	        db 0                    ; 0
+	                db 10001110b            ; flag
+                	dw 0                    ; Offset 31:16
+
+        IRQ21:
+			dw 0	; Handle_IRQ0   ; Offset 15:0
+                	dw selector_code16      ; Segment Selector
+        	        db 0                    ; 0
+	                db 10001110b            ; flag
+                	dw 0                    ; Offset 31:16
+	IRQ_Fill:
+			times (255-0x21)	dw 0, 0, 0, 0
+
+pm_idt:
+        IDT_size                dw $-IRQ00-1	; pm_idt
+        IDT_base                dd 0
+

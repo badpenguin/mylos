@@ -1,0 +1,24 @@
+MyTSS:
+	dd 			; Back Link to previous TSS
+	dd selector_stack0	; Stack 0 Selector
+	dd stack0_limit		; Stack 0 Size
+	dd selector_stack1	; Stack 1 Selector
+	dd stack1_limit		; Stack 1 Size
+	dd selector_stack2	; Stack 2 Selector
+	dd stack2_limit		; Stack 2 Size
+	dd 0			; CR3		(Address of task PDBR)
+	dd 0, 0			; EIP, EGLAGS
+	dd 0, 0, 0, 0		; EAX, ECX, EDX, EBX
+	dd 0, 0, 0, stack0_limit ; ESP, EBP, ESI, EDI
+	dd selector_kernel32_DS	; ES Selector
+	dd selector_kernel32_CS	; CS Selector
+	dd selector_stack0	; SS Selector
+	dd selector_kernel32_DS ; DS Selector
+	dd selector_kernel32_DS ; FS Selector
+	dd selector_kernel32_DS ; GS Selector
+	dd 0			; LDT Field	(Selector of the task LDT)
+	dw 0			; Task Trap Flag	(Debug trap bit)
+	dw 0x68			; I/O Map Base
+
+
+task0_limit equ $ - MyTSS
